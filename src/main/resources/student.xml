@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<students>
+<student id ="1" style="blue">
+	<name>AAA</name>
+	<birth><![CDATA[1980-01-01]]></birth>
+
+</student>
+
+
+<student id ="2"  style="yellow">
+	<name>bbb</name>
+	<birth><![CDATA[1999-01-01]]></birth>
+
+</student>
+
+
+<student id ="5"  style="red">
+	<name>qqq</name>
+	<birth><![CDATA[2001-01-01]]></birth>
+
+</student>
+
+
+</students>
