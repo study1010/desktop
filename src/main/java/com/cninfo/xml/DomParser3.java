@@ -56,6 +56,7 @@ public class DomParser3 {
 		}
 
 		Node node = el.getFirstChild();// 遍历第一个孩子
+		//递归必须有出来的条件
 		while (node != null) {
 
 			visitNode(node);// 遍历第一个孩子的后代
