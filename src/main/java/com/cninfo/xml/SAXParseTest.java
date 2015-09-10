@@ -1,6 +1,5 @@
-package com.cninfo.desktop;
+package com.cninfo.xml;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,26 +19,29 @@ public class SAXParseTest {
 	public static void main(String[] args) throws ParserConfigurationException,
 			SAXException, IOException {
 
-		// 1、创建解析器工厂，工厂模式
+		// 1、创建解析器工厂，SAX工厂模式
 
 		SAXParserFactory spf = SAXParserFactory.newInstance();
-		
 
 		// 2、由工厂创建出SAXP的解释器
 
 		SAXParser sp = spf.newSAXParser();
 
+		// DefaultHandler 处理事件的对象
 		DefaultHandler handler = new MyHandler();
-		sp.parse(new File(
-				"D:\\JavaProject\\desktop\\src\\main\\resources\\student.xml"),
-				handler);
+
+		sp.parse(
+				SAXParseTest.class.getClassLoader().getResourceAsStream(
+						"student.xml"), handler);
 
 		List<Student> list = ((MyHandler) handler).getList();
+		
+		SimpleDateFormat dateFormet=new SimpleDateFormat("yyyy-MM-dd");
 
 		for (Student s : list) {
 
 			System.out.println(s.getId() + "\t" + s.getType() + "\t"
-					+ s.getName() + "\t" + s.getBirth());
+					+ s.getName() + "\t" + dateFormet.format(s.getBirth()));
 		}
 
 	}
@@ -48,9 +50,9 @@ public class SAXParseTest {
 
 class MyHandler extends DefaultHandler {
 
-	private List<Student> list = new ArrayList<Student>();
+	private List<Student> list;
 
-	private Student s;
+	private Student student;
 
 	private String tagName;
 
@@ -58,9 +60,11 @@ class MyHandler extends DefaultHandler {
 		return list;
 	}
 
+	// 这两个方法一般用的很少
 	@Override
 	public void startDocument() throws SAXException {
 
+		list = new ArrayList<Student>();
 		System.out.println("开始解析XML文档了");
 	}
 
@@ -71,21 +75,22 @@ class MyHandler extends DefaultHandler {
 	}
 
 	@Override
-	// uri 名称空间
-	// localName 前缀
+	// uri 名称空间,一般为空
+	// localName 前缀：一般为空
+	// qName 节点的名字
+	// attributes 节点的属性
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
-		// TODO Auto-generated method stub
 
 		if ("student".equals(qName)) {
 
-			this.s = new Student();
+			this.student = new Student();
 
 			String id = attributes.getValue("id");
 			String style = attributes.getValue("style");
 
-			this.s.setId(Integer.parseInt(id));
-			this.s.setType(style);
+			this.student.setId(Integer.parseInt(id));
+			this.student.setType(style);
 
 		}
 
@@ -101,6 +106,7 @@ class MyHandler extends DefaultHandler {
 
 	}
 
+	// 元素结束标签没有传递属性
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
@@ -114,21 +120,24 @@ class MyHandler extends DefaultHandler {
 		}
 
 		if ("student".equals(qName)) {
-			this.list.add(this.s);
+			this.list.add(this.student);
 		}
 
 	}
 
+	
+	//静态的方法只能访问静态的内部类
+	
 	// 传递文本类型的节点
 	@Override
-	public void characters(char[] ch, int start, int length)
+	public void characters(char[] ch, int start, int length)// 传递文本的字符串，字符串从start开始，从end结束
 			throws SAXException {
 
 		String str = new String(ch, start, length);
 
 		if (tagName != null && tagName.length() > 0
 				&& "name".equals(this.tagName)) {
-			this.s.setName(str);
+			this.student.setName(str);
 
 		}
 
@@ -139,7 +148,7 @@ class MyHandler extends DefaultHandler {
 
 			try {
 
-				this.s.setBirth(sdf.parse(str));
+				this.student.setBirth(sdf.parse(str));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -156,6 +165,7 @@ class MyHandler extends DefaultHandler {
 		super.fatalError(e);
 	}
 
+	// 解析器在解析XML的过程中如果出现了警告，则调用这个方法，或者写日志
 	@Override
 	public void warning(SAXParseException e) throws SAXException {
 		super.warning(e);

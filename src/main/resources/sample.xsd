@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="catalog" type="catalogType" />
+	<xsd:complexType name="catalogType">
+		<xsd:sequence>
+			<xds:element maxOccurs="unbounded" minOccurs="0" ref="journal" />
+		</xsd:sequence>
+		<xsd:attribute name="title" type="xsd:string" use="required" />
+		<xsd:attribute name="publisher" type="xsd:string"
+			default="Unknown" />
+
+	</xsd:complexType>
+
+	<xsd:element name="journal">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="article" type="paperType" />
+				<xsd:element name="research" type="paperType" />
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="paperType">
+		<xsd:all>
+			<xsd:element name="title" type="titleType" />
+			<xsd:element name="author" type="authorType" />
+		</xsd:all>
+	</xsd:complexType>
+
+	<xsd:complexType name="authorType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="email" type="xsd:string" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="titleType">
+		<xsd:simpleContent>
+			<xsd:restriction base="xsd:string">
+				<xsd:pattern value="[a-z]{6,8}" />
+			</xsd:restriction>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+</xsd:schema>

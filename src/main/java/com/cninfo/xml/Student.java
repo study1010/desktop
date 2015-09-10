@@ -1,9 +1,15 @@
-package com.cninfo.desktop;
+package com.cninfo.xml;
 
 import java.util.Date;
 
 public class Student {
+	private Integer id;
 
+	private String type;
+
+	private String name;
+
+	private Date birth;
 	public Integer getId() {
 		return id;
 	}
@@ -36,12 +42,6 @@ public class Student {
 		this.birth = birth;
 	}
 
-	private Integer id;
 
-	private String type;
-
-	private String name;
-
-	private Date birth;
 
 }
